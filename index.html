@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Happy Ratha Yatra | AI Image Generator</title>
+    <meta name="description"
+        content="Create your own avatar standing next to Lord Jagannath on Ratha Yatra. Select a template and join the festivities.">
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700;900&display=swap" rel="stylesheet">
+</head>
+
+<body>
+    <div id="app">
+        <!-- Main background with glowing orbs -->
+        <div class="glow-orb orb-1"></div>
+        <div class="glow-orb orb-2"></div>
+        <div class="glow-orb orb-3"></div>
+
+        <nav class="navbar">
+            <h1 class="logo">Rath Yatra AI</h1>
+        </nav>
+
+        <main>
+            <!-- Step 1: Hero Section & Template Selection -->
+            <section id="step-1" class="step active fade-in">
+                <div class="hero-container">
+                    <h1 class="hero-title">Happy <span class="highlight">Ratha Yatra</span></h1>
+                    <p class="hero-subtitle">Create your own image with our Rath and post to your social media accounts
+                        before your friends do!</p>
+                    <div class="hero-img-wrapper glass-panel p-2">
+                        <img src="assets/hero.png" alt="Ratha Yatra Hero" class="hero-img">
+                    </div>
+                </div>
+
+                <div class="templates-section">
+                    <h2>Choose a Design Template</h2>
+                    <p class="templates-subtitle">People are creating images like these. Pick what you like!</p>
+                    <div class="template-grid">
+                        <div class="template-card" onclick="selectTemplate('assets/template_1.png')">
+                            <img src="assets/template_1.png" alt="Template 1">
+                            <div class="template-overlay">Use This Style</div>
+                        </div>
+                        <div class="template-card" onclick="selectTemplate('assets/hero.png')">
+                            <!-- Using hero as a second template style for demo -->
+                            <img src="assets/hero.png" alt="Template 2">
+                            <div class="template-overlay">Use This Style</div>
+                        </div>
+                        <div class="template-card" onclick="selectTemplate('assets/ok.png')">
+                            <!-- The Realistic photo template -->
+                            <img src="assets/ok.png" alt="Realistic Ratha Yatra">
+                            <div class="template-overlay">Realistic Style</div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Step 2: Upload Image -->
+            <section id="step-2" class="step fade-in hidden">
+                <button class="back-btn" onclick="goBack(1)">&#8592; Back</button>
+                <div class="upload-container glass-panel">
+                    <h2 class="section-title">Upload Your Photo</h2>
+                    <p class="section-subtitle">Uploading a clear portrait will yield the best results.</p>
+
+                    <div class="upload-box" id="upload-box" onclick="document.getElementById('file-input').click()">
+                        <span class="upload-icon">📷</span>
+                        <p>Click to upload or drag & drop</p>
+                        <input type="file" id="file-input" accept="image/*" class="hidden"
+                            onchange="handleFileUpload(event)">
+                    </div>
+                    <!-- Preview area -->
+                    <div id="preview-area" class="hidden text-center fade-in">
+                        <div class="preview-img-wrapper">
+                            <img id="image-preview" src="" alt="Preview">
+                        </div>
+                        <button class="primary-btn mt-3" onclick="goToStep(3)">Proceed to Generate</button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Step 3: Payment -->
+            <section id="step-3" class="step fade-in hidden">
+                <button class="back-btn" onclick="goBack(2)">&#8592; Back</button>
+                <div class="payment-container glass-panel text-center">
+                    <h2 class="section-title">Verify & Generate</h2>
+                    <p class="section-subtitle">To prevent bots and cover our AI server bandwidth, please complete a
+                        nominal payment of <strong>₹10</strong>.</p>
+
+                    <div class="qr-wrapper">
+                        <div class="qr-box">
+                            <img src="assets/qr.png" alt="Scan QR Code" class="qr-img">
+                        </div>
+                        <div class="upi-id text-highlight">UPI ID: rathayatra@upi</div>
+                    </div>
+
+                    <!-- Authentic UPI Intent URI for Mobile Support -->
+                    <a href="upi://pay?pa=rathayatra@upi&pn=Ratha%20Yatra%20AI&am=10.00&cu=INR"
+                        class="secondary-btn w-100"
+                        style="display: block; margin-bottom: 10px; text-decoration: none;">Pay with UPI App 📲</a>
+
+                    <button class="primary-btn mt-3 w-100" onclick="confirmPayment()">I have verified my
+                        payment</button>
+                    <p class="secure-text">🔒 Secured by 256-bit Encryption</p>
+                </div>
+            </section>
+
+            <!-- Step 4: Processing -->
+            <section id="step-4" class="step fade-in hidden">
+                <div class="processing-container glass-panel text-center">
+                    <div class="spinner-container">
+                        <div class="spinner"></div>
+                        <div class="spinner-inner"></div>
+                    </div>
+                    <h2 class="processing-title">Generating Magic...</h2>
+                    <p class="processing-subtitle">Connecting to AI models.<br>Styling your image to perfection.</p>
+
+                    <!-- Progress bar -->
+                    <div class="progress-bar-container">
+                        <div class="progress-bar" id="progress-bar"></div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Step 5: Result -->
+            <section id="step-5" class="step fade-in hidden">
+                <div class="result-container glass-panel text-center">
+                    <h2 class="section-title">Jai Jagannath! 🙏</h2>
+                    <p class="section-subtitle">Here is your customized Ratha Yatra photo.</p>
+
+                    <div class="result-box mt-3">
+                        <img id="result-img" src="" alt="Generated Photo" class="responsive-img">
+                    </div>
+
+                    <div class="action-buttons mt-3 row-buttons">
+                        <button class="primary-btn icon-btn" onclick="downloadImage()">Download 📥</button>
+                        <button class="secondary-btn icon-btn" onclick="shareSocial()">Share 🌐</button>
+                    </div>
+                    <button class="text-btn mt-3" onclick="goBack(1)">Create Another ↺</button>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script src="app.js?version=2"></script>
+</body>
+
+</html>
